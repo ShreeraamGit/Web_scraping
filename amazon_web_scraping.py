@@ -1,8 +1,8 @@
-## Import Libraries.
+#Import Libraries.
 from requests_html import HTMLSession
 from bs4 import BeautifulSoup
 import pandas as pd
-#search_term = input("Type your Search Query: ")
+
 s = HTMLSession()
 product_list = []
 asins = []
@@ -18,9 +18,10 @@ def getasin(url):
     This function accepts url as an
     arguement.
 
-    this function returns a 
+    this function returns a
     list of asins.
     '''
+
     r = s.get(url)
     r.html.render(sleep=1)
     products = r.html.find('div[data-asin]')
@@ -34,17 +35,18 @@ def getasin(url):
 def getproductdetails(asin_list):
 
     '''
-    This function fetches details 
+    This function fetches details
     from the asin which is stored in as
     a list.
 
-    This function takes a list with asins from 
+    This function takes a list with asins from
     def getasin(url)
 
-    this function returns a dict with 
+    this function returns a dict with
     name,price,rating,review_count,soldby,
     brand
     '''
+
     for items in asin_list:
         url = f'https://www.amazon.in/dp/{items}'
         r = s.get(url)
@@ -87,19 +89,19 @@ def getproductdetails(asin_list):
         }
 
         product_list.append(log)
-        print('\nSaving...',log['product_name'])
+        print('\nSaving...', log['product_name'])
     return product_list
 
 
 def output(data):
 
     '''
-    this function is used to 
-    convert the dict 
+    this function is used to
+    convert the dict
     from the getproductdetails
     to DataFrame.
 
-    this function accepts the dict as the 
+    this function accepts the dict as the
     arguement
     '''
     df = pd.DataFrame(data)
@@ -110,7 +112,7 @@ def output(data):
 print('\nSession Started.....')
 print('\nData Collection is In Process.Please Wait.....')
 
-for x in range(1,7):
+for x in range(1, 7):
     url = f'https://www.amazon.in//s?k=spirulina&page={x}&qid=1618395019&ref=sr_pg_1'
     asin_list = getasin(url)
 
