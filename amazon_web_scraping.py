@@ -5,8 +5,8 @@ import pandas as pd
 
 s = HTMLSession()
 base_url = 'https://www.amazon.in/'
-search_term = input()
-url = f'https://www.amazon.in/s?k={search_term}'
+#search_term = input()
+url = 'https://www.amazon.in/s?k=spirulina'
 url_list = []
 asins = []
 product_list = []
@@ -134,12 +134,23 @@ def output(data):
 print('\nSession Started.....')
 print('\nData Collection is In Process.Please Wait.....')
 
-for x in range(1, 7):
-    url = f'https://www.amazon.in//s?k=spirulina&page={x}&qid=1618395019&ref=sr_pg_1'
-    asin_list = getasin(url)
+while True:
+
+    soup = getdata(url)
+    url = getnextpage(soup)
+    url_list.append(url)
+    if not url:
+        break
+url_list = url_list[:-1]
+
+print('\nTotal pages to naviagte: ', len(url_list))
+
+for items in url_list:
+    asin_list = getasin(items)
 
 print(f'\nTotal Products to be scraped:{len(asin_list)}')
-print('\nData Collection is In Process.Please Wait.....')
+print('\nData Collection is In Process.Please Wait.....\n')
+
 data = getproductdetails(asin_list)
 
 output(data)
