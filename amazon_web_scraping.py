@@ -4,11 +4,32 @@ from bs4 import BeautifulSoup
 import pandas as pd
 
 s = HTMLSession()
-product_list = []
+base_url = 'https://www.amazon.in/'
+search_term = input()
+url = f'https://www.amazon.in/s?k={search_term}'
+url_list = []
 asins = []
+product_list = []
 
 
-def getasin(url):
+def getdata(url):
+
+    r = s.get(url)
+    soup = BeautifulSoup(r.text, 'html.parser')
+    return soup
+
+
+def getnextpage(soup):
+
+    page = soup.find('ul', {'class': 'a-pagination'})  
+    if not page.find('li', {'class': 'a-disabled a-last'}):
+        pages_url = base_url + str(page.find('li',{'class':'a-last'}).find('a')['href'])
+        return pages_url
+    else:
+        return
+
+
+def getasin(pages_url):
 
     '''
     This function is used to
@@ -22,7 +43,7 @@ def getasin(url):
     list of asins.
     '''
 
-    r = s.get(url)
+    r = s.get(pages_url)
     r.html.render(sleep=1)
     products = r.html.find('div[data-asin]')
     for product in products:
@@ -104,6 +125,7 @@ def output(data):
     this function accepts the dict as the
     arguement
     '''
+    
     df = pd.DataFrame(data)
     print(df.shape)
     df.to_csv("spirulina_new.csv", index=False)
