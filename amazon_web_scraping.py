@@ -5,7 +5,7 @@ import pandas as pd
 
 s = HTMLSession()
 base_url = 'https://www.amazon.in/'
-term = input("Enter the search term to collect data.?\n").capitalize()
+term = input("Enter the search term to collect data.?\n").lower()
 url = f'https://www.amazon.in/s?k={term}'
 url_list = []
 asins = []
@@ -71,7 +71,7 @@ def getproductdetails(asin_list):
     for items in asin_list:
         url = f'https://www.amazon.in/dp/{items}'
         r = s.get(url)
-        r.html.render(sleep=1)
+        r.html.render(sleep=2)
 
         try:
             name = r.html.find('#productTitle', first=True).full_text.strip()
