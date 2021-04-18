@@ -5,8 +5,8 @@ import pandas as pd
 
 s = HTMLSession()
 base_url = 'https://www.amazon.in/'
-#search_term = input()
-url = 'https://www.amazon.in/s?k=spirulina'
+term = input("Enter the search term to collect data.?\n").capitalize()
+url = f'https://www.amazon.in/s?k={term}'
 url_list = []
 asins = []
 product_list = []
@@ -128,9 +128,10 @@ def output(data):
     
     df = pd.DataFrame(data)
     print(df.shape)
-    df.to_csv("spirulina_new.csv", index=False)
+    df.to_csv("output.csv", index=False)
 
 
+print(f'The search term is: {term}')
 print('\nSession Started.....')
 print('\nData Collection is In Process.Please Wait.....')
 
