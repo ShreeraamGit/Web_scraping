@@ -12,14 +12,8 @@ amazon-python-scraper
 
 This Python script searches Amazon for a particular keyword, extracts each products ASIN ID and scrape all the main information from the product page. This will iterate through all pages returned by the keyword query. The following are the fields the spider scrapes for the Amazon product page:
 
-ASIN
-Product name
-Image url
-Price
-Description
-Available sizes
-Available colors
-Ratings
-Number of reviews
-Seller rank
-
+> ASIN
+> Product name
+> Price
+> Ratings
+> Number of reviews
