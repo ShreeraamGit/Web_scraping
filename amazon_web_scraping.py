@@ -3,7 +3,13 @@ from requests_html import HTMLSession
 from bs4 import BeautifulSoup
 import pandas as pd
 
-s = HTMLSession()
+headers = {
+    
+    'user_agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1'
+    
+}
+
+s = HTMLSession(browser_args=["--proxy-server=x.x.x.x:xxxx"])
 base_url = 'https://www.amazon.in/'
 term = input("Enter the search term to collect data.?\n").lower()
 url = f'https://www.amazon.in/s?k={term}'
