@@ -1,3 +1,6 @@
+from time import sleep
+from tqdm import tnrange, tqdm_notebook
+from tqdm import tqdm
 from selenium import webdriver
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -7,7 +10,8 @@ driver = webdriver.Chrome()
 
 def pages_url():
     pages_url = []
-    for x in range(1, 11):
+    for x in tqdm(range(1, 11), desc='Loading: Pages_URL'):
+        sleep(1)
         url = f"https://www.flipkart.com/search?q=spirulina&page={x}"
         pages_url.append(url)
     return pages_url
@@ -16,7 +20,8 @@ def pages_url():
 def product_links(pages_url):
 
     product_links_list = []
-    for items in pages_url:
+    for items in tqdm(pages_url, desc='Loading: Product_links'):
+        sleep(1)
         driver.get(items)
         content = driver.page_source
         soup = BeautifulSoup(content)
@@ -30,49 +35,92 @@ def product_links(pages_url):
 def get_product_details(product_links_list):
 
     product_details = []
-    for item in product_link_list:
+    for item in tqdm(product_links_list, desc='Loading: Collecting Product_details'):
+        sleep(.1)
         driver.get(item)
         content = driver.page_source
-        soup = BeautifulSoup(content)
+        soup = BeautifulSoup(content)   
         try:
-            name = soup.p.text.strip()
-            prices = soup.find_all(text=re.compile('₹'))[0].strip().replace('₹', '')
-            original_price = soup.find_all(text=re.compile('₹'))[2].replace('₹', '').strip()
-            offer = soup.find_all(text=re.compile('off'))[0].split()[0]
-            ratings = soup.select('[id*=productRating]')[0].get_text().strip()
-            seller_name = soup.select('[id*=sellerName]')[0].get_text().strip()[:-3]
-            seller_rating = soup.select('[id*=sellerName]')[0].get_text().strip()[-3:]
-            brand = soup.select('li._21lJbe')[0].get_text().strip()
-            model_name = soup.select('li._21lJbe')[1].get_text().strip()
-            model_number = soup.select('li._21lJbe')[2].get_text().strip()
-            qty = soup.select('li._21lJbe')[3].get_text().strip()
-            type_ = soup.select('li._21lJbe')[4].get_text().strip()
-            form = soup.select('li._21lJbe')[5].get_text().strip()
-            package = soup.select('li._21lJbe')[9].get_text().strip()
-            self_life = soup.select('li._21lJbe')[8].get_text().strip()
-            serving_size = soup.select('li._21lJbe')[10].get_text().strip()
-            rating_count = soup.select('span._2_R_DZ')[0].get_text().strip()[0]
+            pr_name_ = soup.p.text.strip()
         except Exception as e:
-                #raise e
-                b = 0
+            #raise e
+            b = 0
+        try:
+            pr_prices_ = soup.find_all(text=re.compile('₹'))[0].strip().replace('₹','')
+        except Exception as e:
+            #raise e
+            b = 0
+        try:
+            pr_offer_ = soup.find_all(text=re.compile('off'))[0].split()[0].replace('%','')
+        except Exception as e:
+            #raise e
+            b = 0
+        try:
+            rating_1 = soup.select('div._3LWZlK')[0].get_text().strip()
+        except Exception as e:
+            #raise e
+            b = 0
+        try:
+            seller_name_ = soup.select('div._1RLviY')[0].get_text().strip()[:-3]
+        except Exception as e:
+            #raise e
+            b = 0
+        try:
+            seller_rating_ = soup.select('div._3LWZlK')[1].get_text().strip()
+        except Exception as e:
+            #raise e
+            b = 0
+        try:
+            kind_ = soup.select('li._21Ahn-')[0].get_text().strip()
+        except Exception as e:
+            #raise e
+            b = 0
+        try:
+            form_ = soup.select('li._21Ahn-')[1].get_text().split()[0].strip()
+        except Exception as e:
+            #raise e
+            b = 0
+        try:
+            qty_ = soup.select('li._21lJbe')[3].get_text().strip()
+        except Exception as e:
+            #raise e
+            b = 0
+        try:
+            container_type_ = soup.select('li._21lJbe')[9].get_text()
+        except Exception as e:
+            #raise e
+            b = 0
+        try:
+            ratings_count = soup.select('span._2_R_DZ')[0].get_text().split()[0]
+        except Exception as e:
+            #raise e
+            b = 0
+        try:
+            reviews_count = soup.select('span._2_R_DZ')[0].get_text().split()[3]
+        except Exception as e:
+            #raise e
+            b = 0  
+
         log = { 
-            'name': name,
-            'price': prices,
-            'original_price': original_price,
-            'offer': offer,
-            'rating': ratings,
-            'rating_count': rating_count,
-            'seller_name': seller_name,
-            'seller_rating': seller_rating,
-            'brand': brand,
-            'model_name': model_name,
-            'model_number': model_number,
-            'qty': qty,
-            'type': type_,
-            'form': form,
-            'package': package,
-            'self_life': self_life,
-            'serving_size': serving_size
-        
+            'name': pr_name_,
+            'price': pr_prices_,
+            'offer_%': pr_offer_,
+            'rating': rating_1,
+            'seller_name': seller_name_,
+            'seller_rating': seller_rating_,
+            'qty': qty_,
+            'form': form_,
+            'package': container_type_,
+            'kind':kind_,
+            'ratings_count': ratings_count,
+            'reviews_count': reviews_count
         }
         product_details.append(log)
+    return product_details
+
+
+def ouput(dict):
+    df = pd.DataFrame(products)
+    print(df.shape)
+    print('----------------------------')
+    df.to_csv('output.csv'index=False)
