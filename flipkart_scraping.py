@@ -13,7 +13,7 @@ def pages_url():
 
     '''
     this funtion takes no arguement
-    and it returns the urls whihc is 
+    and it returns the urls whihc is
     used for pagination.
     '''
     pages_url = []
@@ -27,9 +27,9 @@ def pages_url():
 def product_links(pages_url):
 
     '''
-    this function takes pages_url as 
-    an arguement from the previous funtion and traverse 
-    through each link to get each links of the 
+    this function takes pages_url as
+    an arguement from the previous funtion and traverse
+    through each link to get each links of the
     products.
     '''
     product_links_list = []
@@ -48,10 +48,10 @@ def product_links(pages_url):
 def get_product_details(product_links_list):
 
     '''
-    this function takes products links 
-    from the prevuois funtion 
+    this function takes products links
+    from the prevuois funtion
     and return the dict of product
-    detials whihc has the following 
+    detials whihc has the following
     information,
     name,price,offer,sellername,
     sellerrating,kind,form,qty
@@ -63,19 +63,19 @@ def get_product_details(product_links_list):
         sleep(.1)
         driver.get(item)
         content = driver.page_source
-        soup = BeautifulSoup(content)   
+        soup = BeautifulSoup(content)
         try:
             pr_name_ = soup.p.text.strip()
         except Exception as e:
             #raise e
             b = 0
         try:
-            pr_prices_ = soup.find_all(text=re.compile('₹'))[0].strip().replace('₹','')
+            pr_prices_ = soup.find_all(text=re.compile('₹'))[0].strip().replace('₹', '')
         except Exception as e:
             #raise e
             b = 0
         try:
-            pr_offer_ = soup.find_all(text=re.compile('off'))[0].split()[0].replace('%','')
+            pr_offer_ = soup.find_all(text=re.compile('off'))[0].split()[0].replace('%', '')
         except Exception as e:
             #raise e
             b = 0
@@ -123,9 +123,9 @@ def get_product_details(product_links_list):
             reviews_count = soup.select('span._2_R_DZ')[0].get_text().split()[3]
         except Exception as e:
             #raise e
-            b = 0  
+            b = 0
 
-        log = { 
+        log = {
             'name': pr_name_,
             'price': pr_prices_,
             'offer_%': pr_offer_,
@@ -135,7 +135,7 @@ def get_product_details(product_links_list):
             'qty': qty_,
             'form': form_,
             'package': container_type_,
-            'kind':kind_,
+            'kind': kind_,
             'ratings_count': ratings_count,
             'reviews_count': reviews_count
         }
@@ -147,7 +147,7 @@ def ouput(dict):
 
     '''
     this function takes the products details
-    from the previous funtion as a list and 
+    from the previous funtion as a list and
     return a dataframe.
     '''
     df = pd.DataFrame(products)
