@@ -1,3 +1,4 @@
+# import Important libraries
 from time import sleep
 from tqdm import tnrange, tqdm_notebook
 from tqdm import tqdm
@@ -9,6 +10,12 @@ driver = webdriver.Chrome()
 
 
 def pages_url():
+
+    '''
+    this funtion takes no arguement
+    and it returns the urls whihc is 
+    used for pagination.
+    '''
     pages_url = []
     for x in tqdm(range(1, 11), desc='Loading: Pages_URL'):
         sleep(1)
@@ -19,6 +26,12 @@ def pages_url():
 
 def product_links(pages_url):
 
+    '''
+    this function takes pages_url as 
+    an arguement from the previous funtion and traverse 
+    through each link to get each links of the 
+    products.
+    '''
     product_links_list = []
     for items in tqdm(pages_url, desc='Loading: Product_links'):
         sleep(1)
@@ -33,6 +46,17 @@ def product_links(pages_url):
 
 
 def get_product_details(product_links_list):
+
+    '''
+    this function takes products links 
+    from the prevuois funtion 
+    and return the dict of product
+    detials whihc has the following 
+    information,
+    name,price,offer,sellername,
+    sellerrating,kind,form,qty
+    containertype etc.
+    '''
 
     product_details = []
     for item in tqdm(product_links_list, desc='Loading: Collecting Product_details'):
@@ -120,6 +144,12 @@ def get_product_details(product_links_list):
 
 
 def ouput(dict):
+
+    '''
+    this function takes the products details
+    from the previous funtion as a list and 
+    return a dataframe.
+    '''
     df = pd.DataFrame(products)
     print(df.shape)
     print('----------------------------')
