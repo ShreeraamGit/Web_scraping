@@ -5,6 +5,8 @@ import re
 from dateutil import parser
 import pandas as pd
 import time
+import datetime
+import os
 driver = webdriver.Chrome()
 records = []
 
@@ -55,6 +57,15 @@ def get_pages(soup):
         return
 
 
+def get_output(records):
+    root = 'job_scraping_output_files'
+    date = datetime.datetime.tommorow().strftime('%d-%m-%Y')
+    final = os.path.join(root, "jobs_extract_wtj_" + date +".csv")
+    df = pd.DataFrame(records)
+    df.to_csv(final, index=False, header=True)
+    return df.head()
+
+
 url = "https://www.welcometothejungle.com/fr/jobs?page=1&aroundQuery=&query=data%20engineer%20&refinementList%5Blanguage%5D%5B%5D=en"
 while True:
     soup = get_data(url)
@@ -64,3 +75,4 @@ while True:
         break
     else:
         print(url)
+get_output(records)
