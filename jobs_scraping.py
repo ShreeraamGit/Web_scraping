@@ -16,22 +16,21 @@ def get_data(url):
     time.sleep(4)
     content = driver.page_source
     time.sleep(4)
-    soup = BeautifulSoup(content)
+    soup = BeautifulSoup(content, features="lxml")
     return soup
 
 
 def get_details(soup):
-    global location_
+    global location
     listings = soup.find_all('li', {'class': 'ais-Hits-list-item'})
     for i in listings:
         company = i.find(class_="ais-Highlight-nonHighlighted").get_text().strip()
         post = i.find(class_="sc-1kkiv1h-9 sc-7dlxn3-4 ivyJep iXGQr").get_text().strip()
         contract = i.find(class_="sc-1qc42fc-2 bzTNsD").get_text().strip()
         try:
-            location_ = i.find(class_="sc-1qc42fc-2 fHAhLi").get_text().strip()
+            location = i.find(class_="sc-1qc42fc-2 fHAhLi").get_text().strip()
         except Exception as e:
-            #raise e
-            b = 0
+            location = "NA"
         job_link = "https://www.welcometothejungle.com" + i.find('a')['href']
         for j in i.findAll('time'):
             if j.has_attr('datetime'):
@@ -41,7 +40,7 @@ def get_details(soup):
             "company_name": company,
             "position": post,
             "contract": contract,
-            "location": location_,
+            "location": location,
             "job_link": job_link,
             "post_date": date
             }
@@ -58,8 +57,8 @@ def get_pages(soup):
 
 
 def get_output(records):
-    root = 'job_scraping_output_files'
-    date = datetime.datetime.tommorow().strftime('%d-%m-%Y')
+    root = "/Users/shreeraamalagarsamysethuraj/Desktop/job_scraping_output_files"
+    date = datetime.datetime.today().strftime('%d-%m-%Y')
     final = os.path.join(root, "jobs_extract_wtj_" + date +".csv")
     df = pd.DataFrame(records)
     df.to_csv(final, index=False, header=True)
