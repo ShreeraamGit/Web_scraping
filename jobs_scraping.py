@@ -30,7 +30,7 @@ def get_details(soup):
         try:
             location = i.find(class_="sc-1qc42fc-2 fHAhLi").get_text().strip()
         except Exception as e:
-            location = "NA"
+            location = "Full Remote/Partial Remote"
         job_link = "https://www.welcometothejungle.com" + i.find('a')['href']
         for j in i.findAll('time'):
             if j.has_attr('datetime'):
