@@ -11,7 +11,21 @@ driver = webdriver.Chrome()
 records = []
 
 
-def get_data(url): 
+def get_search_term():
+    print("Please enter your 'Dream Job'. NOTE: Enter not more than two terms: For example - data analyst,data engineer")
+    user_input = input("Enter the search term.").lower()
+    user_input = user_input.split()
+    first_term = user_input[0]
+    second_term = user_input[1]
+    return first_term, second_term
+
+
+def get_url(first_term, second_term):
+    url = f"https://www.welcometothejungle.com/fr/jobs?page=1&aroundQuery=&query={first_term}%20{second_term}%20&refinementList%5Blanguage%5D%5B%5D=en"
+    return url
+
+
+def get_data(url):
     driver.get(url)
     time.sleep(4)
     content = driver.page_source
@@ -65,7 +79,8 @@ def get_output(records):
     return df.head()
 
 
-url = "https://www.welcometothejungle.com/fr/jobs?page=1&aroundQuery=&query=data%20engineer%20&refinementList%5Blanguage%5D%5B%5D=en"
+first_term, second_term = get_search_term()
+url = get_url(first_term, second_term)
 while True:
     soup = get_data(url)
     get_details(soup)
