@@ -12,7 +12,8 @@ records = []
 
 
 def get_search_term():
-    print("Please enter your 'Dream Job'. NOTE: Enter not more than two terms: For example - data analyst,data engineer")
+    print("Please enter your 'Dream Job'. NOTE: Enter not more than two space separated terms: For example - data analyst,data engineer")
+    print("-" * 115)
     user_input = input("Enter the search term.").lower()
     user_input = user_input.split()
     first_term = user_input[0]
@@ -73,7 +74,7 @@ def get_pages(soup):
 def get_output(records):
     root = "/Users/shreeraamalagarsamysethuraj/Desktop/job_scraping_output_files"
     date = datetime.datetime.today().strftime('%d-%m-%Y')
-    final = os.path.join(root, "jobs_extract_wtj_" + date +".csv")
+    final = os.path.join(root, "jobs_extract_wtj_" + first_term + second_term + date +".csv")
     df = pd.DataFrame(records)
     df.to_csv(final, index=False, header=True)
     return df.head()
@@ -90,3 +91,4 @@ while True:
     else:
         print(url)
 get_output(records)
+driver.quit()
